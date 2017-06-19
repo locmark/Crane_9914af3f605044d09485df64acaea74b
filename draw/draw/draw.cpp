@@ -171,16 +171,16 @@ void UpdateHookPosition() {
 		
 	}
 	if (isLeftClicked) {
-		if (CraneHookPosition.X > CraneJibPosition.X)
+		if (CraneHookPosition.X > CraneJibPosition.X && !IsCollidingFromLeft())
 			CraneHookPosition.X -= hookStep;
 	}
 	if (isUpClicked) {
-		if (CraneHookPosition.Y > CraneHookHeight + CraneJibPosition.Y + CraneMountingHeight)
+		if (CraneHookPosition.Y > CraneHookHeight + CraneJibPosition.Y + CraneMountingHeight && !IsCollidingFromRight())
 			CraneHookPosition.Y -= hookStep;
 
 	}
-	if (isDownClicked) {
-		if ((CraneHookPosition.Y < FloorLevel)) //na razie...
+	if (isDownClicked && (!IsColliding(i) || isCatched)) {
+		if (CraneHookPosition.Y < FloorLevel - (isCatched ? BoxSize : 0)) //na razie...
 			CraneHookPosition.Y += hookStep;
 	}
 }
@@ -192,7 +192,7 @@ void CatchBox() {
 		if (isCatched) {
 			isCatched = false;
 		} else {
-			if (boxes[i].mass > massLiftable) {
+			if (boxes[i].mass <= massLiftable) {
 				isCatched = true;
 				CatchedBox = i;
 				BoxPositionRelativeToHook.X = boxes[i].X - CraneHookPosition.X;
@@ -535,8 +535,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					FloorLevel
 				};
 				InvalidateRect(hWnd, &draw_area, TRUE);
-				MoveBox();
+				
 				UpdateHookPosition();
+				MoveBox();
 				hdc = BeginPaint(hWnd, &ps);				
 				MyOnPaint(hdc);
 				EndPaint(hWnd, &ps);
