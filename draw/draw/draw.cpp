@@ -18,6 +18,8 @@ const int CraneArmWidth = 30;
 const int CraneJibWidth = 1000;
 const int CraneJibHeight = 10;
 
+const int FloorLevel = 600;
+
 const Point CraneJibPosition(150, 20);
 
 
@@ -48,6 +50,12 @@ void DrawCrane(Graphics* graph) {
 }
 
 
+void DrawFloor(Graphics* graph) {
+	Pen blackPen(Color(255, 0, 0, 0));
+	graph->DrawLine(&blackPen, 0, FloorLevel, windowSizeX, FloorLevel);
+}
+
+
 void MyOnPaint(HDC hdc)
 {
 	Bitmap* bmp = new Bitmap(windowSizeX, windowSizeY);
@@ -58,6 +66,7 @@ void MyOnPaint(HDC hdc)
 	value++;
 	CraneArmPosition.X = value;
 
+	DrawFloor(graph);
 	DrawCrane(graph);
 
 	Graphics graphics(hdc);
