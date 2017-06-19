@@ -83,7 +83,7 @@ int OnCreate(HWND window)
 	GetWindowRect(window, &rect);
 	windowSizeX = rect.right - rect.left;
 	windowSizeY = rect.bottom - rect.top;
-	SetTimer(window, TMR_1, 25, 0);
+	SetTimer(window, TMR_1, 5, 0);
 	return 0;
 }
 
