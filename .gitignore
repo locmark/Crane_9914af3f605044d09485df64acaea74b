@@ -33,6 +33,6 @@
 *.VC
 Debug/
 .vs/
-CraneTP/Debug/
-CraneTP.VC.db
+draw/Debug/
+draw.VC.db
 *.opendb
