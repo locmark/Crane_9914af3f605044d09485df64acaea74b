@@ -17,24 +17,26 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 HWND hWnd;
 HWND hwndButton;
 
+bool isCatched = false;
 bool isUpClicked = false;
 bool isDownClicked = false;
 bool isRightClicked = false;
 bool isLeftClicked = false;
 
+const int hookStep = 5;
+const int timerInterval = 100;
+
 const int massMax = 100;
 const int massLiftable = 50;
-
-const int boxAmount = 10;
 
 const int CraneHookHeight = 50;
 const int CraneHookWidth = 30;
 const int CraneMountingHeight = 25;
 const int CraneMountingWidth = 45;
 const int CraneJibWidth = 885;
-
 const int FloorLevel = 470;
 
+const int boxAmount = 10;
 const int BoxSize = 50;
 
 const Point CraneJibPosition(320, 88);
@@ -129,7 +131,6 @@ bool IsColliding (int& i) {
 	return false;
 }
 
-
 bool IsCollidingFromRight() {
 	for (size_t i = 0; i < boxAmount; i++)
 	{
@@ -158,25 +159,50 @@ bool IsCollidingFromLeft() {
 }
 
 
-void UpdateArmPosition() {
+
+void UpdateHookPosition() {
 	int i;
 	if (isRightClicked) {
 		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth);
-			CraneHookPosition.X++;
+		CraneHookPosition.X += hookStep;;
 		
 	}
 	if (isLeftClicked) {
 		if (CraneHookPosition.X > CraneJibPosition.X)
-			CraneHookPosition.X--;
+			CraneHookPosition.X -= hookStep;
 	}
 	if (isUpClicked) {
 		if (CraneHookPosition.Y > CraneHookHeight + CraneJibPosition.Y + CraneMountingHeight)
-			CraneHookPosition.Y--;
+			CraneHookPosition.Y -= hookStep;
 
 	}
 	if (isDownClicked) {
-		if ((CraneHookPosition.Y < FloorLevel) && !IsColliding(i)) //na razie...
-			CraneHookPosition.Y++;
+		if ((CraneHookPosition.Y < FloorLevel)) //na razie...
+			CraneHookPosition.Y += hookStep;
+	}
+}
+
+void MoveBox()
+{
+	int whichIsColliding;
+	if (IsColliding(whichIsColliding)) {
+		if (boxes[whichIsColliding].mass > massMax) {
+			isCatched = false;
+		}
+		else {
+			if (isUpClicked) {
+				boxes[whichIsColliding].Y -= hookStep;
+			}
+			if (isDownClicked) {
+				boxes[whichIsColliding].Y += hookStep;
+			}
+			if (isRightClicked) {
+				boxes[whichIsColliding].X += hookStep;
+			}
+			if (isLeftClicked) {
+				boxes[whichIsColliding].X -= hookStep;
+			}
+		}
 	}
 }
 
@@ -208,7 +234,7 @@ int OnCreate()
 	windowSizeX = rect.right - rect.left;
 	windowSizeY = rect.bottom - rect.top;
 	BoxInit(); 
-	SetTimer(hWnd, TMR_1, 50, 0);
+	SetTimer(hWnd, TMR_1, timerInterval, 0);
 	return 0;
 }
 
@@ -469,6 +495,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				isDownClicked = true;
 			}
 			break;
+		case ID_BUTTON_CATCH:
+			if (isCatched) {
+				isCatched = false;
+			}
+			else {
+				isCatched = true;
+			}
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
@@ -502,10 +535,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					FloorLevel
 				};
 				InvalidateRect(hWnd, &draw_area, TRUE);
-				UpdateArmPosition();
+				if (isCatched) {
+					MoveBox();
+				}
+				UpdateHookPosition();
 				hdc = BeginPaint(hWnd, &ps);				
 				MyOnPaint(hdc);
-				UpdateArmPosition();
 				EndPaint(hWnd, &ps);
 			break;
 		}
