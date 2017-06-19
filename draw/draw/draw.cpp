@@ -99,7 +99,9 @@ void DrawFloor(Graphics* graph) {
 	graph->DrawLine(&blackPen, 0, FloorLevel, windowSizeX, FloorLevel);
 }
 
+
 void UpdateArmPosition() {
+	int a;
 	if (isRightClicked) {
 		if (CraneArmPosition.X < CraneJibPosition.X + CraneJibWidth)
 			CraneArmPosition.X += 10;
@@ -115,6 +117,7 @@ void UpdateArmPosition() {
 
 void MyOnPaint(HDC hdc)
 {
+	//UpdateArmPosition();
 	Bitmap* bmp = new Bitmap(windowSizeX, windowSizeY);
 	Graphics* graph = Graphics::FromImage(bmp);
 
@@ -127,14 +130,7 @@ void MyOnPaint(HDC hdc)
 	DrawFloor(graph);
 	DrawCrane(graph);
 
-	RECT draw_area = {
-		0,
-		0,
-		windowSizeX,
-		FloorLevel
-	};
 
-	InvalidateRect(hWnd, &draw_area, TRUE);
 	Graphics graphics(hdc);
 	graphics.DrawImage(bmp, 0, 0, windowSizeX, windowSizeY);
 
@@ -150,7 +146,7 @@ int OnCreate(HWND window)
 	windowSizeX = rect.right - rect.left;
 	windowSizeY = rect.bottom - rect.top;
 	BoxInit(); 
-	SetTimer(window, TMR_1, 5, 0);
+	SetTimer(window, TMR_1, 25, 0);
 	return 0;
 }
 
@@ -373,15 +369,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
+
+	case WM_ERASEBKGND:
+		break;
+
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		// TODO: Add any drawing code here...
+		
 		MyOnPaint(hdc);
 		EndPaint(hWnd, &ps);
 		break;
 
-	case WM_ERASEBKGND:
-		break;
+	
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
@@ -390,11 +390,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 			case TMR_1:
-				//force window to repaint
+				RECT draw_area = {
+					0,
+					0,
+					windowSizeX,
+					FloorLevel
+				};
+				InvalidateRect(hWnd, &draw_area, TRUE);
+
 				UpdateArmPosition();
-				InvalidateRect(hWnd, NULL, TRUE);
 				hdc = BeginPaint(hWnd, &ps);
+				
 				MyOnPaint(hdc);
+				UpdateArmPosition();
 				EndPaint(hWnd, &ps);
 			break;
 		}
