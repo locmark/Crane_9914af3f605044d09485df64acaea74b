@@ -173,7 +173,7 @@ bool IsBoxCollidingWithAnotherBoxFromTop(int id) {
 		if (i != id && 
 			boxes[id].X > boxes[i].X - BoxSize && 
 			boxes[id].X < boxes[i].X + BoxSize &&
-			boxes[id].Y + BoxSize > boxes[i].Y
+			boxes[id].Y + BoxSize >= boxes[i].Y
 		) {
 			return true;
 		}
@@ -216,12 +216,12 @@ bool IsBoxCollidingWithAnotherBoxFromLeft(int id) {
 
 void UpdateHookPosition() {
 	int i;
-	if (isRightClicked) {
+	if (isRightClicked && !IsBoxCollidingWithAnotherBoxFromLeft(CatchedBox)) {
 		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth && !IsCollidingFromLeft())
 		CraneHookPosition.X += step;
 		
 	}
-	if (isLeftClicked) {
+	if (isLeftClicked && !IsBoxCollidingWithAnotherBoxFromRight(CatchedBox)) {
 		if (CraneHookPosition.X > CraneJibPosition.X && !IsCollidingFromRight())
 			CraneHookPosition.X -= step;
 	}
@@ -232,7 +232,7 @@ void UpdateHookPosition() {
 	}
 
 	if (isDownClicked && (!IsColliding(i) || isCatched)) {
-		if (CraneHookPosition.Y < FloorLevel - (isCatched ? BoxSize : 0)) {
+		if (CraneHookPosition.Y < FloorLevel - (isCatched ? BoxSize : 0) && (isCatched ? !IsBoxCollidingWithAnotherBoxFromTop(CatchedBox) : 1)) {
 			CraneHookPosition.Y += step;
 		}
 	}
