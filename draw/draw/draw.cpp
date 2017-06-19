@@ -13,6 +13,7 @@ TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
 
+HWND hWnd;
 HWND hwndButton;
 
 
@@ -108,6 +109,14 @@ void MyOnPaint(HDC hdc)
 	DrawFloor(graph);
 	DrawCrane(graph);
 
+	RECT draw_area = {
+		0,
+		0,
+		windowSizeY,
+		FloorLevel
+	};
+
+	InvalidateRect(hWnd, &draw_area, TRUE);
 	Graphics graphics(hdc);
 	graphics.DrawImage(bmp, 0, 0, windowSizeX, windowSizeY);
 
@@ -223,7 +232,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   HWND hWnd;
 
    hInst = hInstance; // Store instance handle in our global variable
 
