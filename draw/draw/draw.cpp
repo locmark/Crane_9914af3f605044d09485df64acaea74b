@@ -38,7 +38,7 @@ const int FloorLevel = 470;
 const int boxAmount = 10;
 const int BoxSize = 50;
 
-int CatchedBox;
+int CatchedBox = 0;
 bool isCatched = false;
 Point BoxPositionRelativeToHook;
 
@@ -163,6 +163,28 @@ bool IsCollidingFromLeft() {
 }
 
 
+bool IsBoxCollidingWithAnotherBoxFromTop(int id) {
+	for (size_t i = 0; i < boxAmount; i++)
+	{
+		if (i != id && 
+			boxes[id].X > boxes[i].X - BoxSize && 
+			boxes[id].X < boxes[i].X + BoxSize &&
+			boxes[id].Y + BoxSize > boxes[i].Y
+		) {
+			return true;
+		}
+	}
+	return false;
+}bool IsBoxCollidingWithAnotherBoxFromRight(int id) {	for (size_t i = 0; i < boxAmount; i++)
+	{
+		if (i != id &&
+			1
+			) {
+			return true;
+		}
+	}
+	return false;}
+
 void UpdateHookPosition() {
 	int i;
 	if (isRightClicked) {
@@ -236,7 +258,7 @@ void MyOnPaint(HDC hdc)
 
 	delete bmp;
 	delete graph;
-	//std::cout << "IsCollidingFromLeft " << IsCollidingFromLeft() << " IsCollidingFromRight " << IsCollidingFromRight() << '\n';
+	std::cout << "IsBoxCollidingWithAnotherBoxFromTop " << IsBoxCollidingWithAnotherBoxFromTop(CatchedBox) << '\n';
 }
 
 
