@@ -167,8 +167,8 @@ bool IsCollidingFromLeft() {
 }
 
 
-bool IsBoxCollidingWithAnotherBoxFromTop(int id) {
-	for (size_t i = 0; i < boxAmount; i++)
+bool IsBoxCollidingWithAnotherBoxFromTop(int id, int& i) {
+	for (i = 0; i < boxAmount; i++)
 	{
 		if (i != id && 
 			boxes[id].X > boxes[i].X - BoxSize && 
@@ -215,7 +215,7 @@ bool IsBoxCollidingWithAnotherBoxFromLeft(int id) {
 
 
 void UpdateHookPosition() {
-	int i;
+	int i, j;
 	if (isRightClicked && !IsBoxCollidingWithAnotherBoxFromLeft(CatchedBox)) {
 		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth && !IsCollidingFromLeft())
 		CraneHookPosition.X += step;
@@ -232,7 +232,7 @@ void UpdateHookPosition() {
 	}
 
 	if (isDownClicked && (!IsColliding(i) || isCatched)) {
-		if (CraneHookPosition.Y < FloorLevel - (isCatched ? BoxSize : 0) && (isCatched ? !IsBoxCollidingWithAnotherBoxFromTop(CatchedBox) : 1)) {
+		if (CraneHookPosition.Y < FloorLevel - (isCatched ? BoxSize : 0) && (isCatched ? !IsBoxCollidingWithAnotherBoxFromTop(CatchedBox, j) : 1)) {
 			CraneHookPosition.Y += step;
 		}
 	}
@@ -259,16 +259,17 @@ void CatchBox() {
 
 void MoveBox()
 {
+	int j;
 	if (isCatched) {
 		boxes[CatchedBox].X = CraneHookPosition.X + BoxPositionRelativeToHook.X;
 		boxes[CatchedBox].Y = CraneHookPosition.Y + BoxPositionRelativeToHook.Y;
 	}
 	else {
 		if (CatchedBox >= 0 && CatchedBox < boxAmount) {
-			if (!IsBoxCollidingWithAnotherBoxFromTop(CatchedBox)) {
+			if (!IsBoxCollidingWithAnotherBoxFromTop(CatchedBox, j)) {
 				boxes[CatchedBox].Y += (step + acceleration);
-				if (IsBoxCollidingWithAnotherBoxFromTop(CatchedBox)) {
-					boxes[CatchedBox].Y = FloorLevel - (2*BoxSize + 1);
+				if (IsBoxCollidingWithAnotherBoxFromTop(CatchedBox, j)) {
+					boxes[CatchedBox].Y = boxes[j].Y - (BoxSize + 1 );
 					return;
 				}					
 				if (boxes[CatchedBox].Y >= FloorLevel - (BoxSize + 1)) {
