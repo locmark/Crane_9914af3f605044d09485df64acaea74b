@@ -17,13 +17,12 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 HWND hWnd;
 HWND hwndButton;
 
-
 bool isUpClicked = false;
 bool isDownClicked = false;
 bool isRightClicked = false;
 bool isLeftClicked = false;
 
-const int hookStep = 5;
+const int step = 5;
 const int timerInterval = 100;
 
 const int massMax = 100;
@@ -168,21 +167,23 @@ void UpdateHookPosition() {
 	int i;
 	if (isRightClicked) {
 		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth && !IsCollidingFromLeft())
-		CraneHookPosition.X += hookStep;;
+		CraneHookPosition.X += step;
 		
 	}
 	if (isLeftClicked) {
 		if (CraneHookPosition.X > CraneJibPosition.X && !IsCollidingFromRight())
-			CraneHookPosition.X -= hookStep;
+			CraneHookPosition.X -= step;
 	}
 	if (isUpClicked) {
 		if (CraneHookPosition.Y > CraneHookHeight + CraneJibPosition.Y + CraneMountingHeight)
-			CraneHookPosition.Y -= hookStep;
+			CraneHookPosition.Y -= step;
 
 	}
+
 	if (isDownClicked && (!IsColliding(i) || isCatched)) {
-		if (CraneHookPosition.Y < FloorLevel - (isCatched ? BoxSize : 0)) //na razie...
-			CraneHookPosition.Y += hookStep;
+		if (CraneHookPosition.Y < FloorLevel - (isCatched ? BoxSize : 0)) {
+			CraneHookPosition.Y += step;
+		}
 	}
 }
 
@@ -210,6 +211,11 @@ void MoveBox()
 		boxes[CatchedBox].X = CraneHookPosition.X + BoxPositionRelativeToHook.X;
 		boxes[CatchedBox].Y = CraneHookPosition.Y + BoxPositionRelativeToHook.Y;
 	}
+	else {
+		if (CatchedBox >=0 && CatchedBox < boxAmount && boxes[CatchedBox].Y < FloorLevel - 51) {
+			boxes[CatchedBox].Y += step;
+		}			
+	}
 }
 
 
@@ -230,7 +236,7 @@ void MyOnPaint(HDC hdc)
 
 	delete bmp;
 	delete graph;
-	std::cout << "IsCollidingFromLeft " << IsCollidingFromLeft() << " IsCollidingFromRight " << IsCollidingFromRight() << '\n';
+	//std::cout << "IsCollidingFromLeft " << IsCollidingFromLeft() << " IsCollidingFromRight " << IsCollidingFromRight() << '\n';
 }
 
 
@@ -537,7 +543,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					FloorLevel
 				};
 				InvalidateRect(hWnd, &draw_area, TRUE);
-				
 				UpdateHookPosition();
 				MoveBox();
 				hdc = BeginPaint(hWnd, &ps);				
