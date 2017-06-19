@@ -27,7 +27,7 @@ const int boxAmount = 10;
 const int CraneHookHeight = 50;
 const int CraneHookWidth = 30;
 const int CraneMountingHeight = 25;
-const int CraneMountingWidth = 30;
+const int CraneMountingWidth = 45;
 const int CraneJibWidth = 1000;
 
 const int FloorLevel = 470;
@@ -85,10 +85,14 @@ void DrawCrane(Graphics* graph) {
 	Image craneImage(L"images\\crane.png", FALSE);
 	Image mountingImage(L"images\\mounting.png", FALSE);
 	Image hookImage(L"images\\hook.png", FALSE);
+	// crane body
 	graph->DrawImage(&craneImage, 0, 0, CraneJibWidth + CraneJibPosition.X, FloorLevel);
+	//crane mounting
 	graph->DrawImage(&mountingImage, CraneHookPosition.X - CraneMountingWidth / 2, CraneJibPosition.Y, CraneMountingWidth, CraneMountingHeight);
-
-	graph->DrawLine(&blackPen, CraneHookPosition.X, CraneJibPosition.Y + CraneMountingHeight, CraneHookPosition.X, CraneHookPosition.Y);
+	// crane line
+	graph->DrawLine(&blackPen, CraneHookPosition.X, CraneJibPosition.Y + CraneMountingHeight, CraneHookPosition.X, CraneHookPosition.Y - CraneHookHeight);
+	// crane hook
+	graph->DrawImage(&hookImage, CraneHookPosition.X - CraneHookWidth/2, CraneHookPosition.Y - CraneHookHeight, CraneHookWidth, CraneHookHeight);
 }
 
 
