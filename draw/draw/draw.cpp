@@ -117,12 +117,21 @@ void DrawFloor(Graphics* graph) {
 void UpdateArmPosition() {
 	if (isRightClicked) {
 		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth/2)
-			CraneHookPosition.X ++;
+			CraneHookPosition.X++;
 		
 	}
 	if (isLeftClicked) {
 		if (CraneHookPosition.X > CraneJibPosition.X)
-			CraneHookPosition.X --;
+			CraneHookPosition.X--;
+	}
+	if (isUpClicked) {
+		if (CraneHookPosition.Y > CraneHookHeight)
+			CraneHookPosition.Y--;
+
+	}
+	if (isDownClicked) {
+		if (CraneHookPosition.Y < FloorLevel) //na razie...
+			CraneHookPosition.Y++;
 	}
 }
 
@@ -316,9 +325,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	   (HMENU)ID_BUTTON_RIGHT,                      // the ID of your button
 	   hInstance,                                   // the instance of your application
 	   NULL);                                       // extra bits you dont really need
-
-
-
    
    OnCreate();
 
@@ -385,6 +391,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (isRightClicked) {
 				isRightClicked = false;
 				isLeftClicked = true;
+			}
+			break;
+		case ID_BUTTON_UP:
+			if (isUpClicked) {
+				isUpClicked = false;
+			}
+			else {
+				isUpClicked = true;
+			}
+			if (isDownClicked) {
+				isDownClicked = false;
+				isUpClicked = true;
+			}
+			break;
+		case ID_BUTTON_DOWN:
+			if (isDownClicked) {
+				isDownClicked = false;
+			}
+			else {
+				isDownClicked = true;
+			}
+			if (isUpClicked) {
+				isUpClicked = false;
+				isDownClicked = true;
 			}
 			break;
 		default:
