@@ -186,7 +186,7 @@ void MoveBox()
 {
 	int whichIsColliding;
 	if (IsColliding(whichIsColliding)) {
-		if (boxes[whichIsColliding].mass > massMax) {
+		if (boxes[whichIsColliding].mass > massLiftable) {
 			isCatched = false;
 		}
 		else {
