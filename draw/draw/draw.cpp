@@ -112,7 +112,7 @@ void MyOnPaint(HDC hdc)
 	RECT draw_area = {
 		0,
 		0,
-		windowSizeY,
+		windowSizeX,
 		FloorLevel
 	};
 
@@ -373,6 +373,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				EndPaint(hWnd, &ps);
 			break;
 		}
+	//case 
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
