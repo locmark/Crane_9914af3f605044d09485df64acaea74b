@@ -32,7 +32,6 @@ const int FloorLevel = 470;
 
 const Point CraneJibPosition(10, 10);
 
-
 Point CraneArmPosition(600, 400);
 
 INT value;
@@ -104,27 +103,22 @@ void UpdateArmPosition() {
 	int a;
 	if (isRightClicked) {
 		if (CraneArmPosition.X < CraneJibPosition.X + CraneJibWidth)
-			CraneArmPosition.X += 10;
-		isRightClicked = false;
+			CraneArmPosition.X++;
+		
 	}
 	if (isLeftClicked) {
-		if (CraneArmPosition.X > CraneJibPosition.X + CraneJibWidth)
-			CraneArmPosition.X -= 10;
-		isRightClicked = false;
+		if (CraneArmPosition.X > CraneJibPosition.X)
+			CraneArmPosition.X--;
 	}
 }
 
 
 void MyOnPaint(HDC hdc)
 {
-	//UpdateArmPosition();
 	Bitmap* bmp = new Bitmap(windowSizeX, windowSizeY);
 	Graphics* graph = Graphics::FromImage(bmp);
 
 	graph->Clear(Color(255, 255, 255));
-
-	//value++;
-	//CraneArmPosition.X = value;
 
 	DrawBoxes(graph); 
 	DrawFloor(graph);
@@ -146,7 +140,7 @@ int OnCreate(HWND window)
 	windowSizeX = rect.right - rect.left;
 	windowSizeY = rect.bottom - rect.top;
 	BoxInit(); 
-	SetTimer(window, TMR_1, 25, 0);
+	SetTimer(window, TMR_1, 50, 0);
 	return 0;
 }
 
@@ -342,8 +336,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
-	//OnCreate(hWnd,wParam,lParam);
-	//OnTimer(hWnd,wParam,lParam);
 
 	switch (message)
 	{
@@ -360,10 +352,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 		case ID_BUTTON_RIGHT:
-			isRightClicked = true;
+			if (isRightClicked) {
+				isRightClicked = false;
+			}
+			else {
+				isRightClicked = true;
+			}
+			if (isLeftClicked) {
+				isLeftClicked = false;
+				isRightClicked = true;
+			}
 			break;
 		case ID_BUTTON_LEFT:
-			isLeftClicked = true;
+			if (isLeftClicked) {
+				isLeftClicked = false;
+			}
+			else {
+				isLeftClicked = true;
+			}
+			if (isRightClicked) {
+				isRightClicked = false;
+				isLeftClicked = true;
+			}
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
