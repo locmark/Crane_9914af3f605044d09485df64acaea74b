@@ -178,7 +178,21 @@ bool IsBoxCollidingWithAnotherBoxFromTop(int id) {
 }bool IsBoxCollidingWithAnotherBoxFromRight(int id) {	for (size_t i = 0; i < boxAmount; i++)
 	{
 		if (i != id &&
-			1
+			boxes[id].Y >= boxes[i].Y - BoxSize &&
+			boxes[id].Y <= boxes[i].Y + BoxSize &&
+			boxes[id].X - BoxSize - 2 < boxes[i].X && 
+			boxes[id].X - BoxSize + 2 > boxes[i].X
+			) {
+			return true;
+		}
+	}
+	return false;}bool IsBoxCollidingWithAnotherBoxFromLeft(int id) {	for (size_t i = 0; i < boxAmount; i++)
+	{
+		if (i != id &&
+			boxes[id].Y >= boxes[i].Y - BoxSize &&
+			boxes[id].Y <= boxes[i].Y + BoxSize &&
+			boxes[id].X + BoxSize - 2 < boxes[i].X &&
+			boxes[id].X + BoxSize + 2 > boxes[i].X
 			) {
 			return true;
 		}
@@ -258,7 +272,7 @@ void MyOnPaint(HDC hdc)
 
 	delete bmp;
 	delete graph;
-	std::cout << "IsBoxCollidingWithAnotherBoxFromTop " << IsBoxCollidingWithAnotherBoxFromTop(CatchedBox) << '\n';
+	std::cout << "IsBoxCollidingWithAnotherBoxFromLeft " << IsBoxCollidingWithAnotherBoxFromLeft(CatchedBox) << '\n';
 }
 
 
