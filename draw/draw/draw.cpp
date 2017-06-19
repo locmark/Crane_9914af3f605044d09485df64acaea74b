@@ -22,17 +22,19 @@ bool isRightClicked = false;
 bool isLeftClicked = false;
 
 
-const int boxAmount = 10; 
-const int CraneArmHeight = 50;
-const int CraneArmWidth = 30;
+const int boxAmount = 10;
+
+const int CraneHookHeight = 50;
+const int CraneHookWidth = 30;
+const int CraneMountingHeight = 25;
+const int CraneMountingWidth = 30;
 const int CraneJibWidth = 1000;
-const int CraneJibHeight = 20;
 
 const int FloorLevel = 470;
 
-const Point CraneJibPosition(10, 10);
+const Point CraneJibPosition(320, 88);
+Point CraneHookPosition(600, 400);
 
-Point CraneArmPosition(600, 400);
 
 int windowSizeX;
 int windowSizeY;
@@ -80,12 +82,13 @@ void DrawBoxes(Graphics* graph) {
 void DrawCrane(Graphics* graph) {
 	Pen blackPen(Color(255, 0, 0, 0));
 	SolidBrush yellowBrush(Color(255, 255, 255, 0));
-	Rect CraneJib(CraneJibPosition.X, CraneJibPosition.Y, CraneJibWidth, CraneJibHeight);
-	graph->FillRectangle(&yellowBrush, CraneJib);
-	graph->DrawRectangle(&blackPen, CraneJib);
+	Image craneImage(L"images\\crane.png", FALSE);
+	Image mountingImage(L"images\\mounting.png", FALSE);
+	Image hookImage(L"images\\hook.png", FALSE);
+	graph->DrawImage(&craneImage, 0, 0, CraneJibWidth + CraneJibPosition.X, FloorLevel);
+	graph->DrawImage(&mountingImage, CraneHookPosition.X - CraneMountingWidth / 2, CraneJibPosition.Y, CraneMountingWidth, CraneMountingHeight);
 
-	graph->DrawLine(&blackPen, Point(CraneArmPosition.X, CraneJibPosition.Y + CraneJibHeight), CraneArmPosition);
-	graph->DrawRectangle(&blackPen, CraneArmPosition.X - CraneArmWidth / 2, CraneArmPosition.Y, CraneArmWidth, CraneArmHeight);
+	graph->DrawLine(&blackPen, CraneHookPosition.X, CraneJibPosition.Y + CraneMountingHeight, CraneHookPosition.X, CraneHookPosition.Y);
 }
 
 
@@ -98,13 +101,13 @@ void DrawFloor(Graphics* graph) {
 void UpdateArmPosition() {
 	int a;
 	if (isRightClicked) {
-		if (CraneArmPosition.X < CraneJibPosition.X + CraneJibWidth)
-			CraneArmPosition.X++;
+		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth/2)
+			CraneHookPosition.X += 5;
 		
 	}
 	if (isLeftClicked) {
-		if (CraneArmPosition.X > CraneJibPosition.X)
-			CraneArmPosition.X--;
+		if (CraneHookPosition.X > CraneJibPosition.X)
+			CraneHookPosition.X -= 5;
 	}
 }
 

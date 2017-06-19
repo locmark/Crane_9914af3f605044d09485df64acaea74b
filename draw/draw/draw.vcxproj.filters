@@ -50,4 +50,15 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\crane.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\hook.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\mounting.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
