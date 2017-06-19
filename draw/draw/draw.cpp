@@ -135,6 +135,7 @@ bool IsColliding (int& i) {
 	return false;
 }
 
+
 bool IsCollidingFromRight() {
 	for (size_t i = 0; i < boxAmount; i++)
 	{
@@ -166,16 +167,16 @@ bool IsCollidingFromLeft() {
 void UpdateHookPosition() {
 	int i;
 	if (isRightClicked) {
-		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth);
+		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth && !IsCollidingFromLeft())
 		CraneHookPosition.X += hookStep;;
 		
 	}
 	if (isLeftClicked) {
-		if (CraneHookPosition.X > CraneJibPosition.X && !IsCollidingFromLeft())
+		if (CraneHookPosition.X > CraneJibPosition.X && !IsCollidingFromRight())
 			CraneHookPosition.X -= hookStep;
 	}
 	if (isUpClicked) {
-		if (CraneHookPosition.Y > CraneHookHeight + CraneJibPosition.Y + CraneMountingHeight && !IsCollidingFromRight())
+		if (CraneHookPosition.Y > CraneHookHeight + CraneJibPosition.Y + CraneMountingHeight)
 			CraneHookPosition.Y -= hookStep;
 
 	}
@@ -229,6 +230,7 @@ void MyOnPaint(HDC hdc)
 
 	delete bmp;
 	delete graph;
+	std::cout << "IsCollidingFromLeft " << IsCollidingFromLeft() << " IsCollidingFromRight " << IsCollidingFromRight() << '\n';
 }
 
 
