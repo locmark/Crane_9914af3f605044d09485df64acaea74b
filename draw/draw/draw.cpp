@@ -13,6 +13,8 @@ TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
 INT value;
+int windowSizeX;
+int windowSizeY;
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -23,19 +25,33 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 void MyOnPaint(HDC hdc)
 {
-	value++;
-	Graphics graphics(hdc);
-	Pen pen(Color(255,0,0,255));
-	//graphics.DrawLine(&pen,0,0,200,100);
+	Bitmap* bmp = new Bitmap(windowSizeX, windowSizeY);
+	Graphics* graph = Graphics::FromImage(bmp);
 
-	graphics.DrawRectangle(&pen,100+value,100,10, 20);
+	graph->Clear(Color(255, 255, 255));
+
+	value++;
+	Pen pen(Color(255,0,0,255));
+
+	graph->DrawLine(&pen,0,0,200,100);
+	graph->DrawRectangle(&pen,100+value,100,10, 20);
+
+	Graphics graphics(hdc);
+	graphics.DrawImage(bmp, 0, 0, windowSizeX, windowSizeY);
+
+	delete bmp;
+	delete graph;
 }
 
 
 int OnCreate(HWND window)
 {
-   SetTimer(window, TMR_1, 25, 0);
-   return 0;
+	RECT rect;
+	GetWindowRect(window, &rect);
+	windowSizeX = rect.right - rect.left;
+	windowSizeY = rect.bottom - rect.top;
+	SetTimer(window, TMR_1, 25, 0);
+	return 0;
 }
 
 
@@ -138,8 +154,17 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    hInst = hInstance; // Store instance handle in our global variable
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+   hWnd = CreateWindow(	szWindowClass,
+						szTitle, 
+						WS_OVERLAPPEDWINDOW,
+						CW_USEDEFAULT,
+						0, 
+						CW_USEDEFAULT, 
+						0, 
+						NULL, 
+						NULL, 
+						hInstance, 
+						NULL);
    
    OnCreate(hWnd);
 
@@ -195,6 +220,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// TODO: Add any drawing code here...
 		MyOnPaint(hdc);
 		EndPaint(hWnd, &ps);
+		break;
+
+	case WM_ERASEBKGND:
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
