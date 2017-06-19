@@ -12,15 +12,19 @@ HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
-const int boxAmount = 10;
+
+HWND hwndButton;
+
+
+const int boxAmount = 10; 
 const int CraneArmHeight = 50;
 const int CraneArmWidth = 30;
 const int CraneJibWidth = 1000;
-const int CraneJibHeight = 10;
+const int CraneJibHeight = 20;
 
-const int FloorLevel = 600;
+const int FloorLevel = 470;
 
-const Point CraneJibPosition(150, 20);
+const Point CraneJibPosition(10, 10);
 
 
 Point CraneArmPosition(600, 400);
@@ -30,16 +34,16 @@ int windowSizeX;
 int windowSizeY;
 
 
-struct box {
-	int X;
-	int Y;
-	int width;
-	int height;
-	int mass;
-};
-
-
-box boxes[boxAmount];
+struct box { 
+  int X; 
+  int Y; 
+  int width; 
+  int height; 
+  int mass; 
+}; 
+ 
+ 
+box boxes[boxAmount]; 
 
 
 // Forward declarations of functions included in this code module:
@@ -48,27 +52,28 @@ BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
-
-void BoxInit() {
-	for (size_t i = 0; i < boxAmount; i++)
-	{
-		boxes[i].X = 200 + 60 * i;
-		boxes[i].Y = FloorLevel - 50;
-		boxes[i].width = 50;
-		boxes[i].height = 50;
-		boxes[i].mass = 100;
-	}
-}
-
-
-void DrawBoxes(Graphics* graph) {
-	Pen blackPen(Color(255, 0, 0, 0));
-
-	for (size_t i = 0; i < boxAmount; i++)
-	{
-		graph->DrawRectangle(&blackPen, boxes[i].X, boxes[i].Y, boxes[i].width, boxes[i].height);
-	}
-}
+void BoxInit() { 
+  for (size_t i = 0; i < boxAmount; i++) 
+  { 
+    boxes[i].X = 200 + 60 * i; 
+    boxes[i].Y = FloorLevel - 50; 
+    boxes[i].width = 50; 
+    boxes[i].height = 50; 
+    boxes[i].mass = 100; 
+  } 
+} 
+ 
+ 
+void DrawBoxes(Graphics* graph) { 
+  Pen blackPen(Color(255, 0, 0, 0)); 
+ 
+  for (size_t i = 0; i < boxAmount; i++) 
+  { 
+    graph->DrawRectangle(&blackPen, boxes[i].X, boxes[i].Y, boxes[i].width, boxes[i].height); 
+  } 
+} 
+ 
+ 
 
 
 void DrawCrane(Graphics* graph) {
@@ -99,9 +104,9 @@ void MyOnPaint(HDC hdc)
 	value++;
 	CraneArmPosition.X = value;
 
+	DrawBoxes(graph); 
 	DrawFloor(graph);
 	DrawCrane(graph);
-	DrawBoxes(graph);
 
 	Graphics graphics(hdc);
 	graphics.DrawImage(bmp, 0, 0, windowSizeX, windowSizeY);
@@ -117,7 +122,7 @@ int OnCreate(HWND window)
 	GetWindowRect(window, &rect);
 	windowSizeX = rect.right - rect.left;
 	windowSizeY = rect.bottom - rect.top;
-	BoxInit();
+	BoxInit(); 
 	SetTimer(window, TMR_1, 5, 0);
 	return 0;
 }
@@ -233,6 +238,59 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 						NULL, 
 						hInstance, 
 						NULL);
+
+   hwndButton = CreateWindow(TEXT("button"),        // The class name required is button
+	   TEXT("Up"),									// the caption of the button
+	   WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,       // the styles
+	   550, 480,                                    // the left and top co-ordinates
+	   60, 20,                                      // width and height
+	   hWnd,                                        // parent window handle
+	   (HMENU)ID_BUTTON_UP,							// the ID of your button
+	   hInstance,                                   // the instance of your application
+	   NULL);										// extra bits you dont really need
+
+   hwndButton = CreateWindow(TEXT("button"),        // The class name required is button
+	   TEXT("Catch"),								// the caption of the button
+	   WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,       // the styles
+	   550, 505,                                    // the left and top co-ordinates
+	   60, 20,										// width and height
+	   hWnd,                                        // parent window handle
+	   (HMENU)ID_BUTTON_CATCH,                      // the ID of your button
+	   hInstance,                                   // the instance of your application
+	   NULL);                                       // extra bits you dont really need
+
+   hwndButton = CreateWindow(TEXT("button"),        // The class name required is button
+	   TEXT("Down"),                                // the caption of the button
+	   WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,       // the styles
+	   550, 530,                                    // the left and top co-ordinates
+	   60, 20,                                      // width and height
+	   hWnd,                                        // parent window handle
+	   (HMENU)ID_BUTTON_DOWN,                       // the ID of your button
+	   hInstance,                                   // the instance of your application
+	   NULL);                                       // extra bits you dont really need
+
+   hwndButton = CreateWindow(TEXT("button"),        // The class name required is button
+	   TEXT("Left"),                                // the caption of the button
+	   WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,       // the styles
+	   485, 505,                                    // the left and top co-ordinates
+	   60, 20,                                      // width and height
+	   hWnd,                                        // parent window handle
+	   (HMENU)ID_BUTTON_LEFT,                       // the ID of your button
+	   hInstance,                                   // the instance of your application
+	   NULL);                                       // extra bits you dont really need
+
+   hwndButton = CreateWindow(TEXT("button"),        // The class name required is button
+	   TEXT("Right"),                               // the caption of the button
+	   WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,       // the styles
+	   615, 505,                                    // the left and top co-ordinates
+	   60, 20,                                      // width and height
+	   hWnd,                                        // parent window handle
+	   (HMENU)ID_BUTTON_RIGHT,                      // the ID of your button
+	   hInstance,                                   // the instance of your application
+	   NULL);                                       // extra bits you dont really need
+
+
+
    
    OnCreate(hWnd);
 
