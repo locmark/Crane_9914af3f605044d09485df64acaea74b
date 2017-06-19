@@ -93,6 +93,7 @@ void DrawBoxes(Graphics* graph) {
   } 
 } 
  
+
 void DrawCrane(Graphics* graph) {
 	Pen blackPen(Color(255, 0, 0, 0));
 	SolidBrush yellowBrush(Color(255, 255, 255, 0));
@@ -113,6 +114,19 @@ void DrawCrane(Graphics* graph) {
 void DrawFloor(Graphics* graph) {
 	Pen blackPen(Color(255, 0, 0, 0));
 	graph->DrawLine(&blackPen, 0, FloorLevel, windowSizeX, FloorLevel);
+}
+
+
+bool IsCollidingFromTop (int& i) {
+	for (i = 0; i < boxAmount; i++)
+	{
+		if (boxes[i].X <= CraneHookPosition.X && CraneHookPosition.X <= boxes[i].X + BoxSize) {
+			if (boxes[i].Y <= CraneHookPosition.Y) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 
