@@ -17,10 +17,14 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 HWND hWnd;
 HWND hwndButton;
 
+
 bool isUpClicked = false;
 bool isDownClicked = false;
 bool isRightClicked = false;
 bool isLeftClicked = false;
+
+int acceleration;
+const int accelerationStep = 5;
 
 const int step = 5;
 const int timerInterval = 100;
@@ -40,9 +44,9 @@ const int BoxSize = 50;
 
 int CatchedBox = 0;
 bool isCatched = false;
-Point BoxPositionRelativeToHook;
 
 const Point CraneJibPosition(320, 88);
+Point BoxPositionRelativeToHook;
 Point CraneHookPosition(320, 400);
 
 
@@ -73,7 +77,7 @@ void BoxInit() {
   for (ptrdiff_t i = 0; i < boxAmount; i++) 
   { 
     boxes[i].X = 400 + 60 * i; 
-    boxes[i].Y = FloorLevel - 51; 
+    boxes[i].Y = FloorLevel - (BoxSize + 1); 
     boxes[i].width = BoxSize;
     boxes[i].height = BoxSize;
     boxes[i].mass = rand() % massMax + 1; 
@@ -175,7 +179,11 @@ bool IsBoxCollidingWithAnotherBoxFromTop(int id) {
 		}
 	}
 	return false;
-}bool IsBoxCollidingWithAnotherBoxFromRight(int id) {	for (size_t i = 0; i < boxAmount; i++)
+}
+
+
+bool IsBoxCollidingWithAnotherBoxFromRight(int id) {
+	for (size_t i = 0; i < boxAmount; i++)
 	{
 		if (i != id &&
 			boxes[id].Y >= boxes[i].Y - BoxSize &&
@@ -186,7 +194,12 @@ bool IsBoxCollidingWithAnotherBoxFromTop(int id) {
 			return true;
 		}
 	}
-	return false;}bool IsBoxCollidingWithAnotherBoxFromLeft(int id) {	for (size_t i = 0; i < boxAmount; i++)
+	return false;
+}
+
+
+bool IsBoxCollidingWithAnotherBoxFromLeft(int id) {
+	for (size_t i = 0; i < boxAmount; i++)
 	{
 		if (i != id &&
 			boxes[id].Y >= boxes[i].Y - BoxSize &&
@@ -197,7 +210,9 @@ bool IsBoxCollidingWithAnotherBoxFromTop(int id) {
 			return true;
 		}
 	}
-	return false;}
+	return false;
+}
+
 
 void UpdateHookPosition() {
 	int i;
@@ -232,6 +247,7 @@ void CatchBox() {
 		} else {
 			if (boxes[i].mass <= massLiftable) {
 				isCatched = true;
+				acceleration = 0;
 				CatchedBox = i;
 				BoxPositionRelativeToHook.X = boxes[i].X - CraneHookPosition.X;
 				BoxPositionRelativeToHook.Y = boxes[i].Y - CraneHookPosition.Y;
@@ -248,10 +264,21 @@ void MoveBox()
 		boxes[CatchedBox].Y = CraneHookPosition.Y + BoxPositionRelativeToHook.Y;
 	}
 	else {
-		if (CatchedBox >=0 && CatchedBox < boxAmount && boxes[CatchedBox].Y < FloorLevel - 51) {
-			boxes[CatchedBox].Y += step;
-		}			
-	}
+		if (CatchedBox >= 0 && CatchedBox < boxAmount) {
+			if (!IsBoxCollidingWithAnotherBoxFromTop(CatchedBox)) {
+				boxes[CatchedBox].Y += (step + acceleration);
+				if (IsBoxCollidingWithAnotherBoxFromTop(CatchedBox)) {
+					boxes[CatchedBox].Y = FloorLevel - (2*BoxSize + 1);
+					return;
+				}					
+				if (boxes[CatchedBox].Y >= FloorLevel - (BoxSize + 1)) {
+					boxes[CatchedBox].Y = FloorLevel - (BoxSize + 1);
+					return;
+				}
+				acceleration += accelerationStep;
+			}
+		}
+	}			
 }
 
 
@@ -272,7 +299,6 @@ void MyOnPaint(HDC hdc)
 
 	delete bmp;
 	delete graph;
-	std::cout << "IsBoxCollidingWithAnotherBoxFromLeft " << IsBoxCollidingWithAnotherBoxFromLeft(CatchedBox) << '\n';
 }
 
 
