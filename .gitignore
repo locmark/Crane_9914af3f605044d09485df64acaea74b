@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+*.db
+*.ipch
+
+*.VC
+Debug/
+.vs/
+CraneTP/Debug/
+CraneTP.VC.db
+*.opendb
