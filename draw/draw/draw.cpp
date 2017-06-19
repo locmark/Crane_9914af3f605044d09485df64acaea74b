@@ -31,14 +31,14 @@ const int CraneHookHeight = 50;
 const int CraneHookWidth = 30;
 const int CraneMountingHeight = 25;
 const int CraneMountingWidth = 45;
-const int CraneJibWidth = 1000;
+const int CraneJibWidth = 885;
 
 const int FloorLevel = 470;
 
 const int BoxSize = 50;
 
 const Point CraneJibPosition(320, 88);
-Point CraneHookPosition(600, 400);
+Point CraneHookPosition(320, 400);
 
 
 int windowSizeX;
@@ -65,7 +65,7 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 void BoxInit() { 
   srand((unsigned)time(NULL));
-  for (size_t i = 0; i < boxAmount; i++) 
+  for (ptrdiff_t i = 0; i < boxAmount; i++) 
   { 
     boxes[i].X = 400 + 60 * i; 
     boxes[i].Y = FloorLevel - 51; 
@@ -131,8 +131,9 @@ bool IsCollidingFromTop (int& i) {
 
 
 void UpdateArmPosition() {
+	int i;
 	if (isRightClicked) {
-		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth/2)
+		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth);
 			CraneHookPosition.X++;
 		
 	}
@@ -141,12 +142,12 @@ void UpdateArmPosition() {
 			CraneHookPosition.X--;
 	}
 	if (isUpClicked) {
-		if (CraneHookPosition.Y > CraneHookHeight)
+		if (CraneHookPosition.Y > CraneHookHeight + CraneJibPosition.Y + CraneMountingHeight)
 			CraneHookPosition.Y--;
 
 	}
 	if (isDownClicked) {
-		if (CraneHookPosition.Y < FloorLevel) //na razie...
+		if ((CraneHookPosition.Y < FloorLevel) && !IsCollidingFromTop(i)) //na razie...
 			CraneHookPosition.Y++;
 	}
 }
