@@ -12,6 +12,11 @@ HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
+
+const int CraneArmHeight = 50;
+const int CraneArmWidth = 30;
+
+
 INT value;
 int windowSizeX;
 int windowSizeY;
@@ -33,6 +38,7 @@ void DrawCrane(Graphics* graph) {
 	graph->DrawRectangle(&blackPen, CraneJib);
 
 	graph->DrawLine(&blackPen, Point(CraneArm.X, 30), CraneArm);
+	graph->DrawRectangle(&blackPen, CraneArm.X - CraneArmWidth / 2, CraneArm.Y, CraneArmWidth, CraneArmHeight);
 }
 
 
@@ -44,10 +50,8 @@ void MyOnPaint(HDC hdc)
 	graph->Clear(Color(255, 255, 255));
 
 	value++;
-	Pen pen(Color(255,0,0,255));
+	CraneArm.X = value;
 
-	graph->DrawLine(&pen,0,0,200,100);
-	graph->DrawRectangle(&pen,100+value,100,10, 20);
 	DrawCrane(graph);
 
 	Graphics graphics(hdc);
