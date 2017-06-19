@@ -34,7 +34,6 @@ const Point CraneJibPosition(10, 10);
 
 Point CraneArmPosition(600, 400);
 
-INT value;
 int windowSizeX;
 int windowSizeY;
 
@@ -47,7 +46,7 @@ struct box {
   int mass; 
 }; 
  
- 
+
 box boxes[boxAmount]; 
 
 
@@ -78,9 +77,6 @@ void DrawBoxes(Graphics* graph) {
   } 
 } 
  
- 
-
-
 void DrawCrane(Graphics* graph) {
 	Pen blackPen(Color(255, 0, 0, 0));
 	SolidBrush yellowBrush(Color(255, 255, 255, 0));
@@ -133,14 +129,14 @@ void MyOnPaint(HDC hdc)
 }
 
 
-int OnCreate(HWND window)
+int OnCreate()
 {
 	RECT rect;
-	GetWindowRect(window, &rect);
+	GetWindowRect(hWnd, &rect);
 	windowSizeX = rect.right - rect.left;
 	windowSizeY = rect.bottom - rect.top;
 	BoxInit(); 
-	SetTimer(window, TMR_1, 50, 0);
+	SetTimer(hWnd, TMR_1, 50, 0);
 	return 0;
 }
 
@@ -157,8 +153,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
  	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
-
-	value= 10;
 
 	GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR           gdiplusToken;
@@ -308,7 +302,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 
    
-   OnCreate(hWnd);
+   OnCreate();
 
    if (!hWnd)
    {
@@ -393,6 +387,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	
 	case WM_DESTROY:
+		KillTimer(hWnd, TMR_1);
 		PostQuitMessage(0);
 		break;
 
@@ -407,10 +402,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					FloorLevel
 				};
 				InvalidateRect(hWnd, &draw_area, TRUE);
-
 				UpdateArmPosition();
-				hdc = BeginPaint(hWnd, &ps);
-				
+				hdc = BeginPaint(hWnd, &ps);				
 				MyOnPaint(hdc);
 				UpdateArmPosition();
 				EndPaint(hWnd, &ps);
