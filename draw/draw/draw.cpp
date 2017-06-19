@@ -35,6 +35,8 @@ const int CraneJibWidth = 1000;
 
 const int FloorLevel = 470;
 
+const int BoxSize = 50;
+
 const Point CraneJibPosition(320, 88);
 Point CraneHookPosition(600, 400);
 
@@ -67,8 +69,8 @@ void BoxInit() {
   { 
     boxes[i].X = 400 + 60 * i; 
     boxes[i].Y = FloorLevel - 51; 
-    boxes[i].width = 50; 
-    boxes[i].height = 50; 
+    boxes[i].width = BoxSize;
+    boxes[i].height = BoxSize;
     boxes[i].mass = rand() % massMax + 1; 
   } 
 } 
