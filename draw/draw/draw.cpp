@@ -147,7 +147,7 @@ void UpdateArmPosition() {
 
 	}
 	if (isDownClicked) {
-		if ((CraneHookPosition.Y < FloorLevel) && !IsCollidingFromTop(i)) //na razie...
+		if ((CraneHookPosition.Y < FloorLevel) && !IsColliding(i)) //na razie...
 			CraneHookPosition.Y++;
 	}
 }
