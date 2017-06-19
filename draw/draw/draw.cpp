@@ -117,7 +117,7 @@ void DrawFloor(Graphics* graph) {
 }
 
 
-bool IsCollidingFromTop (int& i) {
+bool IsColliding (int& i) {
 	for (i = 0; i < boxAmount; i++)
 	{
 		if (boxes[i].X <= CraneHookPosition.X && CraneHookPosition.X <= boxes[i].X + BoxSize) {
@@ -160,7 +160,7 @@ void MyOnPaint(HDC hdc)
 
 	graph->Clear(Color(255, 255, 255));
 
-	DrawBoxes(graph); 
+	DrawBoxes(graph);
 	DrawFloor(graph);
 	DrawCrane(graph);
 
@@ -193,6 +193,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
+
+	// *****show console***** //
+	AllocConsole();
+	AttachConsole(GetCurrentProcessId());
+	FILE *stream;
+	freopen_s(&stream, "CON", "w", stdout);
+	// ********************** //
 	
  	// TODO: Place code here.
 	MSG msg;
