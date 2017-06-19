@@ -16,11 +16,24 @@ INT value;
 int windowSizeX;
 int windowSizeY;
 
+Point CraneArm(600, 400);
+
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+
+
+void DrawCrane(Graphics* graph) {
+	Pen blackPen(Color(255, 0, 0, 0));
+	SolidBrush yellowBrush(Color(255, 255, 255, 0));
+	Rect CraneJib(150, 20, 1000, 10);
+	graph->FillRectangle(&yellowBrush, CraneJib);
+	graph->DrawRectangle(&blackPen, CraneJib);
+
+	graph->DrawLine(&blackPen, Point(CraneArm.X, 30), CraneArm);
+}
 
 
 void MyOnPaint(HDC hdc)
@@ -35,6 +48,7 @@ void MyOnPaint(HDC hdc)
 
 	graph->DrawLine(&pen,0,0,200,100);
 	graph->DrawRectangle(&pen,100+value,100,10, 20);
+	DrawCrane(graph);
 
 	Graphics graphics(hdc);
 	graphics.DrawImage(bmp, 0, 0, windowSizeX, windowSizeY);
