@@ -16,6 +16,11 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 HWND hWnd;
 HWND hwndButton;
 
+bool isUpClicked = false;
+bool isDownClicked = false;
+bool isRightClicked = false;
+bool isLeftClicked = false;
+
 
 const int boxAmount = 10; 
 const int CraneArmHeight = 50;
@@ -94,6 +99,19 @@ void DrawFloor(Graphics* graph) {
 	graph->DrawLine(&blackPen, 0, FloorLevel, windowSizeX, FloorLevel);
 }
 
+void UpdateArmPosition() {
+	if (isRightClicked) {
+		if (CraneArmPosition.X < CraneJibPosition.X + CraneJibWidth)
+			CraneArmPosition.X += 10;
+		isRightClicked = false;
+	}
+	if (isLeftClicked) {
+		if (CraneArmPosition.X > CraneJibPosition.X + CraneJibWidth)
+			CraneArmPosition.X -= 10;
+		isRightClicked = false;
+	}
+}
+
 
 void MyOnPaint(HDC hdc)
 {
@@ -102,8 +120,8 @@ void MyOnPaint(HDC hdc)
 
 	graph->Clear(Color(255, 255, 255));
 
-	value++;
-	CraneArmPosition.X = value;
+	//value++;
+	//CraneArmPosition.X = value;
 
 	DrawBoxes(graph); 
 	DrawFloor(graph);
@@ -345,6 +363,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;
+		case ID_BUTTON_RIGHT:
+			isRightClicked = true;
+			break;
+		case ID_BUTTON_LEFT:
+			isLeftClicked = true;
+			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
@@ -367,13 +391,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			case TMR_1:
 				//force window to repaint
+				UpdateArmPosition();
 				InvalidateRect(hWnd, NULL, TRUE);
 				hdc = BeginPaint(hWnd, &ps);
 				MyOnPaint(hdc);
 				EndPaint(hWnd, &ps);
 			break;
 		}
-	//case 
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
