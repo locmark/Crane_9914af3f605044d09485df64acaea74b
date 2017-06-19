@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "draw.h"
+#include <ctime>
 
 #define MAX_LOADSTRING 100
 #define TMR_1 1
@@ -21,6 +22,8 @@ bool isDownClicked = false;
 bool isRightClicked = false;
 bool isLeftClicked = false;
 
+const int massMax = 100;
+const int massLiftable = 50;
 
 const int boxAmount = 10;
 
@@ -59,23 +62,32 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 void BoxInit() { 
+  srand((unsigned)time(NULL));
   for (size_t i = 0; i < boxAmount; i++) 
   { 
-    boxes[i].X = 200 + 60 * i; 
-    boxes[i].Y = FloorLevel - 50; 
+    boxes[i].X = 400 + 60 * i; 
+    boxes[i].Y = FloorLevel - 51; 
     boxes[i].width = 50; 
     boxes[i].height = 50; 
-    boxes[i].mass = 100; 
+    boxes[i].mass = rand() % massMax + 1; 
   } 
 } 
  
  
 void DrawBoxes(Graphics* graph) { 
-  Pen blackPen(Color(255, 0, 0, 0)); 
- 
+  Pen blackPen(Color(255, 0, 0, 0));
+  SolidBrush* boxBrush; 
   for (size_t i = 0; i < boxAmount; i++) 
-  { 
-    graph->DrawRectangle(&blackPen, boxes[i].X, boxes[i].Y, boxes[i].width, boxes[i].height); 
+  {
+	  if (boxes[i].mass <= massLiftable) {
+		  boxBrush = new SolidBrush(Color::Green);
+	  }
+	  else {
+		  boxBrush = new SolidBrush(Color::Red);
+	  }
+	  graph->DrawRectangle(&blackPen, boxes[i].X, boxes[i].Y, boxes[i].width, boxes[i].height);
+	  graph->FillRectangle(boxBrush, boxes[i].X + 1, boxes[i].Y + 1, boxes[i].width - 1, boxes[i].height - 1);
+	  delete boxBrush;
   } 
 } 
  
@@ -103,15 +115,14 @@ void DrawFloor(Graphics* graph) {
 
 
 void UpdateArmPosition() {
-	int a;
 	if (isRightClicked) {
 		if (CraneHookPosition.X < CraneJibPosition.X + CraneJibWidth - CraneMountingWidth/2)
-			CraneHookPosition.X += 5;
+			CraneHookPosition.X ++;
 		
 	}
 	if (isLeftClicked) {
 		if (CraneHookPosition.X > CraneJibPosition.X)
-			CraneHookPosition.X -= 5;
+			CraneHookPosition.X --;
 	}
 }
 
