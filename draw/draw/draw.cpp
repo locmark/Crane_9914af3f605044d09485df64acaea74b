@@ -12,7 +12,7 @@ HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
-
+const int boxAmount = 10;
 const int CraneArmHeight = 50;
 const int CraneArmWidth = 30;
 const int CraneJibWidth = 1000;
@@ -30,12 +30,45 @@ int windowSizeX;
 int windowSizeY;
 
 
+struct box {
+	int X;
+	int Y;
+	int width;
+	int height;
+	int mass;
+};
+
+
+box boxes[boxAmount];
+
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+
+
+void BoxInit() {
+	for (size_t i = 0; i < boxAmount; i++)
+	{
+		boxes[i].X = 200 + 60 * i;
+		boxes[i].Y = FloorLevel - 50;
+		boxes[i].width = 50;
+		boxes[i].height = 50;
+		boxes[i].mass = 100;
+	}
+}
+
+
+void DrawBoxes(Graphics* graph) {
+	Pen blackPen(Color(255, 0, 0, 0));
+
+	for (size_t i = 0; i < boxAmount; i++)
+	{
+		graph->DrawRectangle(&blackPen, boxes[i].X, boxes[i].Y, boxes[i].width, boxes[i].height);
+	}
+}
 
 
 void DrawCrane(Graphics* graph) {
@@ -68,6 +101,7 @@ void MyOnPaint(HDC hdc)
 
 	DrawFloor(graph);
 	DrawCrane(graph);
+	DrawBoxes(graph);
 
 	Graphics graphics(hdc);
 	graphics.DrawImage(bmp, 0, 0, windowSizeX, windowSizeY);
@@ -83,6 +117,7 @@ int OnCreate(HWND window)
 	GetWindowRect(window, &rect);
 	windowSizeX = rect.right - rect.left;
 	windowSizeY = rect.bottom - rect.top;
+	BoxInit();
 	SetTimer(window, TMR_1, 5, 0);
 	return 0;
 }
