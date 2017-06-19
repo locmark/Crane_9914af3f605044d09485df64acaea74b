@@ -130,6 +130,34 @@ bool IsColliding (int& i) {
 }
 
 
+bool IsCollidingFromRight() {
+	for (size_t i = 0; i < boxAmount; i++)
+	{
+		if (boxes[i].Y <= CraneHookPosition.Y &&
+			boxes[i].X + BoxSize <= (CraneHookPosition.X - CraneHookWidth / 2) + 2 &&
+			boxes[i].X + BoxSize >= (CraneHookPosition.X - CraneHookWidth / 2) - 2
+		) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
+bool IsCollidingFromLeft() {
+	for (size_t i = 0; i < boxAmount; i++)
+	{
+		if (boxes[i].Y <= CraneHookPosition.Y &&
+			boxes[i].X >= (CraneHookPosition.X + CraneHookWidth / 2) - 2 &&
+			boxes[i].X <= (CraneHookPosition.X + CraneHookWidth / 2) + 2
+			) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
 void UpdateArmPosition() {
 	int i;
 	if (isRightClicked) {
