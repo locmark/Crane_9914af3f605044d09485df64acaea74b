@@ -15,13 +15,19 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
 const int CraneArmHeight = 50;
 const int CraneArmWidth = 30;
+const int CraneJibWidth = 1000;
+const int CraneJibHeight = 10;
 
+const Point CraneJibPosition(150, 20);
+
+
+Point CraneArmPosition(600, 400);
 
 INT value;
 int windowSizeX;
 int windowSizeY;
 
-Point CraneArm(600, 400);
+
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -33,12 +39,12 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 void DrawCrane(Graphics* graph) {
 	Pen blackPen(Color(255, 0, 0, 0));
 	SolidBrush yellowBrush(Color(255, 255, 255, 0));
-	Rect CraneJib(150, 20, 1000, 10);
+	Rect CraneJib(CraneJibPosition.X, CraneJibPosition.Y, CraneJibWidth, CraneJibHeight);
 	graph->FillRectangle(&yellowBrush, CraneJib);
 	graph->DrawRectangle(&blackPen, CraneJib);
 
-	graph->DrawLine(&blackPen, Point(CraneArm.X, 30), CraneArm);
-	graph->DrawRectangle(&blackPen, CraneArm.X - CraneArmWidth / 2, CraneArm.Y, CraneArmWidth, CraneArmHeight);
+	graph->DrawLine(&blackPen, Point(CraneArmPosition.X, CraneJibPosition.Y + CraneJibHeight), CraneArmPosition);
+	graph->DrawRectangle(&blackPen, CraneArmPosition.X - CraneArmWidth / 2, CraneArmPosition.Y, CraneArmWidth, CraneArmHeight);
 }
 
 
@@ -50,7 +56,7 @@ void MyOnPaint(HDC hdc)
 	graph->Clear(Color(255, 255, 255));
 
 	value++;
-	CraneArm.X = value;
+	CraneArmPosition.X = value;
 
 	DrawCrane(graph);
 
